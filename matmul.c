@@ -1,8 +1,80 @@
 #include "matmul.h"
 
 
+void* method_1_thread_runner(void *method_1_data_void) {
+	method_1_data *data = (method_1_data*) method_1_data_void;
+	int i = data->row;
+	for (int j = 0; j < data->mat_b->cols_num; ++j) {
+		for (int k = 0; k < data->mat_a->cols_num; ++k) {
+			data->mat_c->values[i][j] += data->mat_a->values[i][k] * data->mat_b->values[k][j];
+		}
+	}
+	return NULL;
+}
 
-int matmul(char *a_path, char *b_path, char *c_path) {	
+
+void* method_2_thread_runner(void *method_2_data_void) {
+	method_2_data *data = (method_2_data*) method_2_data_void;
+	int i = data->row;
+	int j = data->col;
+	
+	for (int k = 0; k < data->mat_a->cols_num; ++k) {
+		data->mat_c->values[i][j] += data->mat_a->values[i][k] * data->mat_b->values[k][j];
+	}
+	return NULL;
+}
+
+
+void parallel_matmmul_method_1(matrix_t *mat_a, matrix_t *mat_b, matrix_t *mat_c) {
+	for (int i = 0; i < mat_a->rows_num; ++i) {
+		method_1_data* data = malloc(sizeof(method_1_data));
+		data->mat_a = mat_a;
+		data->mat_b = mat_b;
+		data->mat_c = mat_c;
+		data->row = i;
+
+		pthread_t row_thread;
+
+		if(pthread_create(&row_thread, NULL, method_1_thread_runner, data)) {
+			fprintf(stderr, "Error creating thread\n");
+			return;
+		}
+	}
+}
+
+void parallel_matmmul_method_2(matrix_t *mat_a, matrix_t *mat_b, matrix_t *mat_c) {
+	for (int i = 0; i < mat_a->rows_num; ++i) {
+		for (int j = 0; j < mat_b->cols_num; ++j) {
+			method_2_data* data = malloc(sizeof(method_2_data));
+			data->mat_a = mat_a;
+			data->mat_b = mat_b;
+			data->mat_c = mat_c;
+			data->row = i;
+			data->col = j;
+
+			pthread_t row_thread;
+
+			if(pthread_create(&row_thread, NULL, method_2_thread_runner, data)) {
+				fprintf(stderr, "Error creating thread\n");
+				return;
+			}
+		}
+	}
+}
+
+
+void squential_matmul(matrix_t *mat_a, matrix_t *mat_b, matrix_t *mat_c) {
+	for (int i = 0; i < mat_a->rows_num; ++i) {
+		for (int j = 0; j < mat_b->cols_num; ++j) {
+			for (int k = 0; k < mat_a->cols_num; ++k) {
+				mat_c->values[i][j] += mat_a->values[i][k] * mat_b->values[k][j];
+			}
+		}
+	}
+}
+
+
+int matmul(char *a_path, char *b_path, char *c_path, matmul_mode mode) {
 	matrix_t* mat_a = load_matrix(a_path);
 	matrix_t* mat_b = load_matrix(b_path);
 
@@ -11,6 +83,7 @@ int matmul(char *a_path, char *b_path, char *c_path) {
 	float **c_values = malloc(sizeof(float*) * mat_a->rows_num);
 	for (int i = 0; i < mat_a->rows_num; ++i) {
 		c_values[i] = malloc(sizeof(float) * mat_b->cols_num);
+		// make sure values are initialized with zero.
 		for (int j = 0; j < mat_b->cols_num; ++j) {
 			c_values[i][j] = 0;
 		}
@@ -23,13 +96,19 @@ int matmul(char *a_path, char *b_path, char *c_path) {
 	mat_c->cols_num = mat_b->cols_num;
 
 
-	for (int i = 0; i < mat_a->rows_num; ++i) {
-		for (int j = 0; j < mat_b->cols_num; ++j) {
-			for (int k = 0; k < mat_a->cols_num; ++k) {
-				mat_c->values[i][j] += mat_a->values[i][k] * mat_b->values[k][j];
-			}
-		}
+	switch(mode) {
+		case PARALLEL_MATMUL_1:
+			parallel_matmmul_method_1(mat_a, mat_b, mat_c);
+			break;
+		case PARALLEL_MATMUL_2:
+			parallel_matmmul_method_2(mat_a, mat_b, mat_c);
+			break;
+		case SEQUNETIAL_MATMUL:
+			squential_matmul(mat_a, mat_b, mat_c);
+			break;
 	}
+
+	// thread_join(, NULL);
 
 	save_matrix(mat_c);
 
@@ -38,6 +117,7 @@ int matmul(char *a_path, char *b_path, char *c_path) {
 	free_matrix(mat_c);
 	return 0;
 }
+
 
 
 
@@ -109,7 +189,7 @@ int save_matrix(matrix_t *mat) {
 		fprintf(file, "\n");
 	}
 
-	print_matrix(mat);
+	// print_matrix(mat);
 	fclose(file);
 	return 0;
 }
