@@ -11,6 +11,9 @@ int matmul(char *a_path, char *b_path, char *c_path) {
 	float **c_values = malloc(sizeof(float*) * mat_a->rows_num);
 	for (int i = 0; i < mat_a->rows_num; ++i) {
 		c_values[i] = malloc(sizeof(float) * mat_b->cols_num);
+		for (int j = 0; j < mat_b->cols_num; ++j) {
+			c_values[i][j] = 0;
+		}
 	}
 
 	matrix_t *mat_c = malloc(sizeof(matrix_t));
@@ -23,13 +26,13 @@ int matmul(char *a_path, char *b_path, char *c_path) {
 	for (int i = 0; i < mat_a->rows_num; ++i) {
 		for (int j = 0; j < mat_b->cols_num; ++j) {
 			for (int k = 0; k < mat_a->cols_num; ++k) {
-				mat_c->values[i][k] += mat_a->values[i][k] * mat_b->values[k][j];
+				mat_c->values[i][j] += mat_a->values[i][k] * mat_b->values[k][j];
 			}
 		}
 	}
 
 	save_matrix(mat_c);
-	
+
 	free_matrix(mat_a);
 	free_matrix(mat_b);
 	free_matrix(mat_c);
