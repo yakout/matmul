@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
 
 	// CODE
 	if (argc == 1) {
-		use defaults
+		// use defaults
 		gettimeofday(&start, NULL); //start checking time
 		matmul("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_1);
 		gettimeofday(&stop, NULL); //end checking time

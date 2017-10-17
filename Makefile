@@ -17,7 +17,7 @@ LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
-	    $(LINK.cc) $(program_OBJS) -o $(program_NAME)
+	    $(LINK.cc) $(CFLAGS) $(program_OBJS) -o $(program_NAME)
 
 clean:
 	    @- $(RM) $(program_NAME) # @ prevents the command to be printed on the consol and - ignores the exit status
