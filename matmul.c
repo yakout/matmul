@@ -94,14 +94,23 @@ matrix_t* load_matrix(char *path) {
 	mat->cols_num = cols_num;
 	mat->values = values;
 
-	// print_matrix(mat);
-
+	fclose(file);
 	return mat;
 }
 
 
 int save_matrix(matrix_t *mat) {
+	FILE *file = fopen(mat->path, "w");
+
+	for (int i = 0; i < mat->rows_num; ++i) {
+		for (int j = 0; j < mat->cols_num; ++j) {
+			fprintf(file, "%f\t\t", mat->values[i][j]);
+		}
+		fprintf(file, "\n");
+	}
+
 	print_matrix(mat);
+	fclose(file);
 	return 0;
 }
 

@@ -11,12 +11,15 @@ int main(int argc, char **argv) {
 	
 
 	// CODE
-	if (argc != 4) {
+	if (argc == 1) {
+		// use defaults
+		matmul("a.txt", "b.txt", "c.txt");
+	} else if (argc != 4) {
 		printf("%s\n", "usage: matmul MatA MatB OutMAt");
 		return 1;
-	} 
-	
-	matmul(argv[1], argv[2], argv[3]);
+	} else {
+		matmul(argv[1], argv[2], argv[3]);
+	}
 	//
 
 	gettimeofday(&stop, NULL); //end checking time
