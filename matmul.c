@@ -216,3 +216,25 @@ void free_matrix(matrix_t *mat) {
 }
 
 
+int generate_number(int lowerLimit, int upperLimit) {
+	srand(time(NULL));
+    int r =  lowerLimit + rand() % (upperLimit - lowerLimit);
+    return r;
+}
+
+void generate_matrix(char *path, int rows_num, int cols_num) {
+	FILE file = fopen(path, "w");
+	fprintf(file, "%d %d\n", rows_num, cols_num);
+
+
+		
+	for (int i = 0; i < count; ++i) {
+		for (int j = 0; j < count; ++j) {
+			fprintf(file, "%d\t", generate_number(0, 100));
+		}
+		fprintf(file, "\n");
+	}
+
+	fclose(file);
+}
+
