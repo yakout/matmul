@@ -6,41 +6,61 @@
 
 
 int main(int argc, char **argv) {
-	struct timeval stop, start;
-	// gettimeofday(&start, NULL); //start checking time
-	
 	// generate_matrix("a.txt", 100, 100);
 	// generate_matrix("b.txt", 100, 100);
 
+	// generate_matrix("a100.txt", 100, 100);
+	// generate_matrix("b100.txt", 100, 100);
+	
 	// CODE
 	if (argc == 1) {
 		// use defaults
-		gettimeofday(&start, NULL); //start checking time
+		printf("RUNNING MODE 0\n");
 		matmul("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_1);
-		gettimeofday(&stop, NULL); //end checking time
-		printf("Seconds taken %lu\n", stop.tv_sec - start.tv_sec);
-		printf("PARALLEL_MATMUL_1 MODE: Microseconds taken: %lu\n", stop.tv_usec - start.tv_usec);
-
-		gettimeofday(&start, NULL); //start checking time
-		matmul("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_2);
-		gettimeofday(&stop, NULL); //end checking time
-		printf("Seconds taken %lu\n", stop.tv_sec - start.tv_sec);
-		printf("PARALLEL_MATMUL_2 MODE: Microseconds taken: %lu\n", stop.tv_usec - start.tv_usec);
-
-		gettimeofday(&start, NULL); //start checking time
-		matmul("a.txt", "b.txt", "c.txt", SEQUNETIAL_MATMUL);
-		gettimeofday(&stop, NULL); //end checking time
-		printf("Seconds taken %lu\n", stop.tv_sec - start.tv_sec);
-		printf("SEQUNETIAL_MATMUL MODE: Microseconds taken: %lu\n", stop.tv_usec - start.tv_usec);
-	} else if (argc != 4) {
-		printf("%s\n", "usage: matmul MatA MatB OutMAt");
-		return 1;
+	} else if (argc == 5) {
+		int mode = atoi(argv[4]);
+		switch(mode) {
+			case 0:
+				printf("RUNNING MODE 0\n");
+				matmul_with_benchmark(argv[1], argv[2], argv[3], PARALLEL_MATMUL_1);
+				break;
+			case 1:
+				printf("RUNNING MODE 1\n");
+				matmul_with_benchmark(argv[1], argv[2], argv[3], PARALLEL_MATMUL_2);
+				break;
+			case 2:
+				printf("RUNNING MODE 2\n");
+				matmul_with_benchmark(argv[1], argv[2], argv[3], SEQUNETIAL_MATMUL);
+				break;
+			default:
+				printf("INVALID MODE NUMBER %s\n", argv[4]);
+				printf("usage: matmul [MatA] [MatB] [OutMAt] [MODE] \nMODES: \n");
+				printf("0: PARALLEL METHOD 1 \n1: PARALLEL METHOD 2 \n2: SEQUENTIAL\n");
+			}
+	} else if (argc == 4) {
+		matmul_with_benchmark(argv[1], argv[2], argv[3], PARALLEL_MATMUL_1);
+	} else if (argc == 2) {
+		int mode = atoi(argv[1]);
+		switch(mode) {
+			case 0:
+				printf("RUNNING MODE 0\n");
+				matmul_with_benchmark("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_1);
+				break;
+			case 1:
+				printf("RUNNING MODE 1\n");
+				matmul_with_benchmark("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_2);
+				break;
+			case 2:
+				printf("RUNNING MODE 2\n");
+				matmul_with_benchmark("a.txt", "b.txt", "c.txt", SEQUNETIAL_MATMUL);
+				break;
+			default:
+				printf("INVALID MODE NUMBER %s\n", argv[1]);
+				printf("usage: matmul [MatA] [MatB] [OutMAt] [MODE] \nMODES: \n");
+				printf("0: PARALLEL METHOD 1 \n1: PARALLEL METHOD 2 \n2: SEQUENTIAL\n");
+			}
 	} else {
-		matmul(argv[1], argv[2], argv[3], PARALLEL_MATMUL_1);
+		printf("usage: matmul [MatA] [MatB] [OutMAt] [MODE] \nMODES: \n");
+		printf("0: PARALLEL METHOD 1 \n1: PARALLEL METHOD 2 \n2: SEQUENTIAL\n");
 	}
-	//
-
-	// gettimeofday(&stop, NULL); //end checking time
-	// printf("Seconds taken %lu\n", stop.tv_sec - start.tv_sec);
-	// printf("Microseconds taken: %lu\n", stop.tv_usec - start.tv_usec);
 }

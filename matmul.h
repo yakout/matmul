@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <string.h>
 #include <pthread.h>
+#include <sys/time.h>
 #include <time.h>
 
 
@@ -24,7 +25,7 @@ typedef enum {
 typedef struct matrix_t {
 	char name[MAX_FILE_NAME];
 	char path[MAX_FILE_PATH];
-	float **values;
+	long long **values;
 	int rows_num;
 	int cols_num;
 } matrix_t;
@@ -57,6 +58,8 @@ void print_matrix(matrix_t *mat);
 void free_matrix(matrix_t *mat);
 
 void generate_matrix(char *path, int rows_num, int cols_num);
+
+void matmul_with_benchmark(char* a, char*b, char* c, matmul_mode mode);
 
 
 #endif // MATMUL_H_
