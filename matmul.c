@@ -13,6 +13,31 @@ void* method_1_thread_runner(void *method_1_data_void) {
 }
 
 
+void parallel_matmmul_method_1(matrix_t *mat_a, matrix_t *mat_b, matrix_t *mat_c) {
+	pthread_t **threads = malloc(sizeof(pthread_t *) * mat_a->rows_num);
+
+	for (int i = 0; i < mat_a->rows_num; ++i) {
+		method_1_data* data = malloc(sizeof(method_1_data));
+		data->mat_a = mat_a;
+		data->mat_b = mat_b;
+		data->mat_c = mat_c;
+		data->row = i;
+
+		pthread_t *row_thread = malloc(sizeof(pthread_t));
+		threads[i] = row_thread;
+
+		if(pthread_create(row_thread, NULL, method_1_thread_runner, data)) {
+			fprintf(stderr, "Error creating thread\n");
+			return;
+		}
+	}
+
+	for (int i = 0; i < mat_a->rows_num; ++i) {
+		pthread_join(threads[i], NULL);
+	}
+
+}
+
 void* method_2_thread_runner(void *method_2_data_void) {
 	method_2_data *data = (method_2_data*) method_2_data_void;
 	int i = data->row;
@@ -25,24 +50,10 @@ void* method_2_thread_runner(void *method_2_data_void) {
 }
 
 
-void parallel_matmmul_method_1(matrix_t *mat_a, matrix_t *mat_b, matrix_t *mat_c) {
-	for (int i = 0; i < mat_a->rows_num; ++i) {
-		method_1_data* data = malloc(sizeof(method_1_data));
-		data->mat_a = mat_a;
-		data->mat_b = mat_b;
-		data->mat_c = mat_c;
-		data->row = i;
-
-		pthread_t row_thread;
-
-		if(pthread_create(&row_thread, NULL, method_1_thread_runner, data)) {
-			fprintf(stderr, "Error creating thread\n");
-			return;
-		}
-	}
-}
-
 void parallel_matmmul_method_2(matrix_t *mat_a, matrix_t *mat_b, matrix_t *mat_c) {
+	pthread_t **threads = malloc(sizeof(pthread_t *) * mat_a->rows_num * mat_b->cols_num);
+	int count = 0;
+
 	for (int i = 0; i < mat_a->rows_num; ++i) {
 		for (int j = 0; j < mat_b->cols_num; ++j) {
 			method_2_data* data = malloc(sizeof(method_2_data));
@@ -52,13 +63,18 @@ void parallel_matmmul_method_2(matrix_t *mat_a, matrix_t *mat_b, matrix_t *mat_c
 			data->row = i;
 			data->col = j;
 
-			pthread_t row_thread;
+			pthread_t *cell_thread = malloc(sizeof(pthread_t));
+			threads[count++] = cell_thread;
 
-			if(pthread_create(&row_thread, NULL, method_2_thread_runner, data)) {
+			if(pthread_create(cell_thread, NULL, method_2_thread_runner, data)) {
 				fprintf(stderr, "Error creating thread\n");
 				return;
 			}
 		}
+	}
+
+	for (int i = 0; i < count; ++i) {
+		pthread_join(threads[i], NULL);
 	}
 }
 
@@ -107,8 +123,6 @@ int matmul(char *a_path, char *b_path, char *c_path, matmul_mode mode) {
 			squential_matmul(mat_a, mat_b, mat_c);
 			break;
 	}
-
-	// thread_join(, NULL);
 
 	save_matrix(mat_c);
 
