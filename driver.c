@@ -5,13 +5,9 @@
 
 
 int main(int argc, char **argv) {
-	// generate_matrix("a.txt", 100, 100);
-	// generate_matrix("b.txt", 100, 100);
-
-	// generate_matrix("a100.txt", 100, 100);
-	// generate_matrix("b100.txt", 100, 100);
+	// generate_matrix("a.txt", 100, 100, 0, 100);
+	// generate_matrix("b.txt", 100, 100, 0, 100);
 	
-	// CODE
 	if (argc == 1) {
 		// use defaults
 		printf("RUNNING MODE 0\n");

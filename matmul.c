@@ -128,11 +128,11 @@ int matmul(char *a_path, char *b_path, char *c_path, matmul_mode mode) {
 			break;
 	}
 
-	// save_matrix(mat_c);
+	save_matrix(mat_c);
 
-	// free_matrix(mat_a);
-	// free_matrix(mat_b);
-	// free_matrix(mat_c);
+	free_matrix(mat_a);
+	free_matrix(mat_b);
+	free_matrix(mat_c);
 	return 0;
 }
 
@@ -251,13 +251,13 @@ int generate_number(int lowerLimit, int upperLimit) {
     return r;
 }
 
-void generate_matrix(char *path, int rows_num, int cols_num) {
+void generate_matrix(char *path, int rows_num, int cols_num, int min, int high) {
 	FILE *file = fopen(path, "w");
 	fprintf(file, "%d %d\n", rows_num, cols_num);
 		
 	for (int i = 0; i < rows_num; ++i) {
 		for (int j = 0; j < cols_num; ++j) {
-			fprintf(file, "%d\t", generate_number(0, 100));
+			fprintf(file, "%d\t", generate_number(min, high));
 		}
 		fprintf(file, "\n");
 	}
