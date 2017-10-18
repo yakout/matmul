@@ -1,2 +1,2 @@
 # matmul
-Matrix multiplication algorithms in c
+Parallel Matrix multiplication in c
