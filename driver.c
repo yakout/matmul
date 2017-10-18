@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 	if (argc == 1) {
 		// use defaults
 		printf("RUNNING MODE 0\n");
-		matmul("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_1);
+		matmul_with_benchmark("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_1);
 	} else if (argc == 5) {
 		int mode = atoi(argv[4]);
 		switch(mode) {
