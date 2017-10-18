@@ -11,7 +11,7 @@ void squential_matmul(matrix_t *mat_a, matrix_t *mat_b, matrix_t *mat_c) {
 }
 
 
-int matmul(char *a_path, char *b_path, char *c_path, matmul_mode mode) {
+int matmul(char *a_path, char *b_path, char *c_path, matmul_mode mode, int print_to_stdout) {
 	matrix_t* mat_a = load_matrix(a_path);
 	matrix_t* mat_b = load_matrix(b_path);
 
@@ -45,6 +45,7 @@ int matmul(char *a_path, char *b_path, char *c_path, matmul_mode mode) {
 			break;
 	}
 
+	if (print_to_stdout) print_matrix(mat_c);
 	save_matrix(mat_c);
 
 	free_matrix(mat_a);
@@ -54,15 +55,18 @@ int matmul(char *a_path, char *b_path, char *c_path, matmul_mode mode) {
 }
 
 
-void matmul_with_benchmark(char* a, char*b, char* c, matmul_mode mode) {
+void matmul_with_benchmark(char* a, char*b, char* c, matmul_mode mode, int print_to_stdout) {
+	printf("****************************************\n");
 	struct timeval stop, start;
 	gettimeofday(&start, NULL);
 
-	matmul(a, b, c, mode);
+	matmul(a, b, c, mode, print_to_stdout);
 
 	gettimeofday(&stop, NULL);
-	printf("Seconds taken %lu\n", stop.tv_sec - start.tv_sec);
-	printf("Microseconds taken: %lu\n", stop.tv_usec - start.tv_usec);
+	printf("* Seconds taken: %lu\n", stop.tv_sec - start.tv_sec);
+	printf("****************************************\n");
+	printf("* Microseconds taken: %lu\n", stop.tv_usec - start.tv_usec);
+	printf("****************************************\n");
 }
 
 
@@ -136,7 +140,6 @@ int save_matrix(matrix_t *mat) {
 		fprintf(file, "\n");
 	}
 
-	// print_matrix(mat);
 	fclose(file);
 	return 0;
 }

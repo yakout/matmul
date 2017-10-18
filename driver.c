@@ -8,24 +8,25 @@ int main(int argc, char **argv) {
 	// generate_matrix("a.txt", 100, 100, 0, 100);
 	// generate_matrix("b.txt", 100, 100, 0, 100);
 	
+	printf("****************************************\n");
 	if (argc == 1) {
 		// use defaults
-		printf("RUNNING MODE 0\n");
-		matmul_with_benchmark("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_1);
+		printf("* RUNNING MODE 0\n");
+		matmul_with_benchmark("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_1, 0);
 	} else if (argc == 5) {
 		int mode = atoi(argv[4]);
 		switch(mode) {
 			case 0:
-				printf("RUNNING MODE 0\n");
-				matmul_with_benchmark(argv[1], argv[2], argv[3], PARALLEL_MATMUL_1);
+				printf("* RUNNING MODE 0\n");
+				matmul_with_benchmark(argv[1], argv[2], argv[3], PARALLEL_MATMUL_1, 0);
 				break;
 			case 1:
-				printf("RUNNING MODE 1\n");
-				matmul_with_benchmark(argv[1], argv[2], argv[3], PARALLEL_MATMUL_2);
+				printf("* RUNNING MODE 1\n");
+				matmul_with_benchmark(argv[1], argv[2], argv[3], PARALLEL_MATMUL_2, 0);
 				break;
 			case 2:
-				printf("RUNNING MODE 2\n");
-				matmul_with_benchmark(argv[1], argv[2], argv[3], SEQUNETIAL_MATMUL);
+				printf("* RUNNING MODE 2\n");
+				matmul_with_benchmark(argv[1], argv[2], argv[3], SEQUNETIAL_MATMUL, 0);
 				break;
 			default:
 				printf("INVALID MODE NUMBER %s\n", argv[4]);
@@ -33,21 +34,21 @@ int main(int argc, char **argv) {
 				printf("0: PARALLEL METHOD 1 \n1: PARALLEL METHOD 2 \n2: SEQUENTIAL\n");
 			}
 	} else if (argc == 4) {
-		matmul_with_benchmark(argv[1], argv[2], argv[3], PARALLEL_MATMUL_1);
+		matmul_with_benchmark(argv[1], argv[2], argv[3], PARALLEL_MATMUL_1, 0);
 	} else if (argc == 2) {
 		int mode = atoi(argv[1]);
 		switch(mode) {
 			case 0:
-				printf("RUNNING MODE 0\n");
-				matmul_with_benchmark("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_1);
+				printf("* RUNNING MODE 0\n");
+				matmul_with_benchmark("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_1, 0);
 				break;
 			case 1:
-				printf("RUNNING MODE 1\n");
-				matmul_with_benchmark("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_2);
+				printf("* RUNNING MODE 1\n");
+				matmul_with_benchmark("a.txt", "b.txt", "c.txt", PARALLEL_MATMUL_2, 0);
 				break;
 			case 2:
-				printf("RUNNING MODE 2\n");
-				matmul_with_benchmark("a.txt", "b.txt", "c.txt", SEQUNETIAL_MATMUL);
+				printf("* RUNNING MODE 2\n");
+				matmul_with_benchmark("a.txt", "b.txt", "c.txt", SEQUNETIAL_MATMUL, 0);
 				break;
 			default:
 				printf("INVALID MODE NUMBER %s\n", argv[1]);

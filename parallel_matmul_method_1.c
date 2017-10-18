@@ -39,6 +39,7 @@ void parallel_matmmul_method_1(matrix_t *mat_a, matrix_t *mat_b, matrix_t *mat_c
 		free(threads[i]);
 	}
 
-	printf("NUMBER OF THREADS: %d\n", thread_count);
+	printf("* NUMBER OF THREADS: %d\n", thread_count);
+	printf("****************************************\n");
 
 }

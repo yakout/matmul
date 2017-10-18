@@ -61,7 +61,7 @@ int save_matrix(matrix_t *mat);
  * @param mode [description]
  * @return [description]
  */
-int matmul(char *a_path, char *b_path, char *out_path, matmul_mode mode);
+int matmul(char *a_path, char *b_path, char *out_path, matmul_mode mode, int print_to_stdout);
 
 /**
  * @brief print the matrix values to the stdout
@@ -103,7 +103,7 @@ void generate_matrix(char *path, int rows_num, int cols_num, int min, int max);
  * 				1: PARALLEL METHOD 2
  * 				2: SEQUENTIAL
  */
-void matmul_with_benchmark(char* a, char*b, char* c, matmul_mode mode);
+void matmul_with_benchmark(char* a, char*b, char* c, matmul_mode mode, int print_to_stdout);
 
 
 #endif // MATMUL_H_
