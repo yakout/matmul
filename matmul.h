@@ -22,7 +22,6 @@ typedef enum {
 } matmul_mode;
 
 typedef struct matrix_t {
-	char name[MAX_FILE_NAME];
 	char path[MAX_FILE_PATH];
 	long long **values;
 	int rows_num;
