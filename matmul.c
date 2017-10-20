@@ -15,6 +15,10 @@ int matmul(char *a_path, char *b_path, char *c_path, matmul_mode mode, int print
 	matrix_t* mat_a = load_matrix(a_path);
 	matrix_t* mat_b = load_matrix(b_path);
 
+	if (mat_a == NULL || mat_b == NULL) {
+		return -1;
+	}
+
 	assert(mat_a->cols_num == mat_b->rows_num);
 
 	long long **c_values = malloc(sizeof(long long *) * mat_a->rows_num);
@@ -33,6 +37,7 @@ int matmul(char *a_path, char *b_path, char *c_path, matmul_mode mode, int print
 	mat_c->cols_num = mat_b->cols_num;
 
 
+	printf("****************************************\n");
 	switch(mode) {
 		case PARALLEL_MATMUL_1:
 			parallel_matmmul_method_1(mat_a, mat_b, mat_c);
@@ -55,12 +60,12 @@ int matmul(char *a_path, char *b_path, char *c_path, matmul_mode mode, int print
 }
 
 
-void matmul_with_benchmark(char* a, char*b, char* c, matmul_mode mode, int print_to_stdout) {
-	printf("****************************************\n");
+int matmul_with_benchmark(char* a, char*b, char* c, matmul_mode mode, int print_to_stdout) {
 	struct timeval stop, start;
 	gettimeofday(&start, NULL);
 
-	matmul(a, b, c, mode, print_to_stdout);
+	int status = matmul(a, b, c, mode, print_to_stdout);
+	if (status == -1) return status;
 
 	gettimeofday(&stop, NULL);
 	printf("* Seconds taken: %lu\n", stop.tv_sec - start.tv_sec);
@@ -76,22 +81,21 @@ matrix_t* load_matrix(char *path) {
 	FILE* file = fopen(path, "r");
 	if (errno != 0) {
 		perror("matrix loading error: ");
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 
 	int rows_num, cols_num;
 	char *error_msg = "matrix loading error: invalid format";
 	
-	if(fscanf(file, "%d", &rows_num) < 1) {
+	if(fscanf(file, "row=%d", &rows_num) < 1) {
 		fprintf(stderr, "%s\n", error_msg);
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 
-	if(fscanf(file, "%d", &cols_num) < 1) {
+	if(fscanf(file, " col=%d", &cols_num) < 1) {
 		fprintf(stderr, "%s\n", error_msg);
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
-
 
 	long long **values = malloc(sizeof(long long*) * rows_num);
 	// NOTE: this will not allocate a contiguous region of memory.
@@ -114,13 +118,12 @@ matrix_t* load_matrix(char *path) {
 	long long dummy;
 	if(fscanf(file, "%lld", &dummy) > 0) {
 		fprintf(stderr, "%s\n", "matrix loading error: invalid format or dimentions");
-		exit(EXIT_FAILURE);	
+		return NULL;
 	}
 
 
 	matrix_t *mat = malloc(sizeof(matrix_t));
 	strcpy(mat->path, path);
-	// mat->name = "";  // TODO
 	mat->rows_num = rows_num;
 	mat->cols_num = cols_num;
 	mat->values = values;

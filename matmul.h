@@ -101,7 +101,7 @@ void generate_matrix(char *path, int rows_num, int cols_num, int min, int max);
  * 				1: PARALLEL METHOD 2
  * 				2: SEQUENTIAL
  */
-void matmul_with_benchmark(char* a, char*b, char* c, matmul_mode mode, int print_to_stdout);
+int matmul_with_benchmark(char* a, char*b, char* c, matmul_mode mode, int print_to_stdout);
 
 
 #endif // MATMUL_H_
