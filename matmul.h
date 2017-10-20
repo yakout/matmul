@@ -12,7 +12,6 @@
 
 
 #define MAX_FILE_PATH 255
-#define MAX_FILE_NAME 20
 
 
 typedef enum {

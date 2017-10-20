@@ -14,7 +14,9 @@ void* method_2_thread_runner(void *method_2_data_void) {
 
 
 void parallel_matmmul_method_2(matrix_t *mat_a, matrix_t *mat_b, matrix_t *mat_c) {
+	pthread_t **threads = malloc(sizeof(pthread_t*) * mat_a->rows_num * mat_b->cols_num);
 	int thread_count = 0;
+
 	for (int i = 0; i < mat_a->rows_num; ++i) {
 		for (int j = 0; j < mat_b->cols_num; ++j) {
 			method_2_data* data = malloc(sizeof(method_2_data));
@@ -24,16 +26,21 @@ void parallel_matmmul_method_2(matrix_t *mat_a, matrix_t *mat_b, matrix_t *mat_c
 			data->row = i;
 			data->col = j;
 
-			pthread_t cell_thread;
+			pthread_t *cell_thread = malloc(sizeof(pthread_t));
+			threads[thread_count++] = cell_thread;
 
-			if(pthread_create(&cell_thread, NULL, method_2_thread_runner, data)) {
+			if(pthread_create(cell_thread, NULL, method_2_thread_runner, data)) {
 				fprintf(stderr, "Error creating thread\n");
 				return;
 			}
-
-			thread_count++;
 		}
 	}
 
-	printf("NUMBER OF THREADS: %d\n", thread_count);
+	for (int i = 0; i < thread_count; ++i) {
+		pthread_join(*threads[i], NULL);
+		free(threads[i]);
+	}
+
+	printf("* NUMBER OF THREADS: %d\n", thread_count);
+	printf("****************************************\n");
 }

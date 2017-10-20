@@ -5,9 +5,9 @@
 
 
 int main(int argc, char **argv) {
-	// generate_matrix("a.txt", 100, 100, 0, 100);
-	// generate_matrix("b.txt", 100, 100, 0, 100);
-	
+	// generate_matrix("a.txt", 10, 10, 0, 10);
+	// generate_matrix("b.txt", 10, 10, 0, 10);
+
 	printf("****************************************\n");
 	if (argc == 1) {
 		// use defaults
@@ -56,6 +56,7 @@ int main(int argc, char **argv) {
 				printf("0: PARALLEL METHOD 1 \n1: PARALLEL METHOD 2 \n2: SEQUENTIAL\n");
 			}
 	} else {
+		printf("INVALID ARUGMENTS\n");
 		printf("usage: matmul [MatA] [MatB] [OutMAt] [MODE] \nMODES: \n");
 		printf("0: PARALLEL METHOD 1 \n1: PARALLEL METHOD 2 \n2: SEQUENTIAL\n");
 	}
